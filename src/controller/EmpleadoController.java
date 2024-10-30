@@ -40,24 +40,39 @@ public class EmpleadoController {
 		return empleadoDAO.listarEmpleados(filtro, orden);
 	}
 
+	// Método para validaciones de datos
 	private boolean validarEmpleado(Empleado empleado) {
-		// Validación básica
-		if (empleado.getNombre() == null || empleado.getNombre().isEmpty()) {
-			System.out.println("Nombre no puede estar vacío.");
-			return false;
-		}
-		if (empleado.getApellidos() == null || empleado.getApellidos().isEmpty()) {
-			System.out.println("Apellidos no pueden estar vacíos.");
-			return false;
-		}
-		if (empleado.getEmail() == null || !empleado.getEmail().contains("@")) {
-			System.out.println("Email inválido.");
-			return false;
-		}
-		if (empleado.getDepartamento() == null || empleado.getDepartamento().isEmpty()) {
-			System.out.println("Departamento no pueden estar vacío.");
-			return false;
-		}
-		return true;
+	    // Validación del nombre
+	    if (empleado.getNombre() == null || empleado.getNombre().isEmpty()) {
+	        System.out.println("Nombre no puede estar vacío.");
+	        return false;
+	    }
+	    
+	    // Validación de los apellidos
+	    if (empleado.getApellidos() == null || empleado.getApellidos().isEmpty()) {
+	        System.out.println("Apellidos no pueden estar vacíos.");
+	        return false;
+	    }
+	    
+	    // Validación del correo electrónico
+	    if (empleado.getEmail() == null || !empleado.getEmail().contains("@")) {
+	        System.out.println("Email inválido.");
+	        return false;
+	    }
+	    
+	    // Validación del departamento
+	    if (empleado.getDepartamento() == null || empleado.getDepartamento().isEmpty()) {
+	        System.out.println("Departamento no puede estar vacío.");
+	        return false;
+	    }
+	    
+	    // Validación del número de teléfono (solo números)
+	    if (empleado.getTelefono() == null || !empleado.getTelefono().matches("\\d+")) {
+	        System.out.println("El número de teléfono solo puede contener números.");
+	        return false;
+	    }
+
+	    // Si todas las validaciones son correctas
+	    return true;
 	}
 }
