@@ -1,78 +1,78 @@
 package controller;
 
-import model.Empleado;
-import model.EmpleadoDAO;
-
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
+import model.Empleado;
+import model.EmpleadoDAO;
+import model.EmpleadoValidator;
+
 public class EmpleadoController {
-	private EmpleadoDAO empleadoDAO;
+    private EmpleadoDAO empleadoDAO;
 
-	public EmpleadoController() {
-		empleadoDAO = new EmpleadoDAO();
-	}
+    public EmpleadoController() {
+        empleadoDAO = new EmpleadoDAO();
+    }
 
-	public boolean agregarEmpleado(Empleado empleado) {
-		if (validarEmpleado(empleado)) {
-			return empleadoDAO.agregarEmpleado(empleado);
-		}
-		System.out.println("Empleado no válido");
-		return false;
-	}
+    public boolean agregarEmpleado(Empleado empleado) {
+        List<String> errores = EmpleadoValidator.validarEmpleado(empleado);
+        
+        if (errores.isEmpty()) {
+            boolean resultado = empleadoDAO.agregarEmpleado(empleado);
+            if (resultado) {
+                JOptionPane.showMessageDialog(null, "Empleado agregado correctamente.");
+                return true;
+            } else {
+                JOptionPane.showMessageDialog(null, "Error al agregar el empleado.");
+            }
+        } else {
+            mostrarErrores(errores);
+        }
+        return false;
+    }
 
-	public boolean actualizarEmpleado(Empleado empleado) {
-		if (validarEmpleado(empleado)) {
-			return empleadoDAO.actualizarEmpleado(empleado);
-		}
-		System.out.println("Datos de empleado no válidos");
-		return false;
-	}
+    public boolean actualizarEmpleado(Empleado empleado) {
+        List<String> errores = EmpleadoValidator.validarEmpleado(empleado);
+        
+        if (errores.isEmpty()) {
+            boolean resultado = empleadoDAO.actualizarEmpleado(empleado);
+            if (resultado) {
+                JOptionPane.showMessageDialog(null, "Empleado actualizado correctamente.");
+                return true;
+            } else {
+                JOptionPane.showMessageDialog(null, "Error al actualizar el empleado.");
+            }
+        } else {
+            mostrarErrores(errores);
+        }
+        return false;
+    }
 
-	public boolean eliminarEmpleado(int id) {
-		if (id > 0) {
-			return empleadoDAO.eliminarEmpleado(id);
-		}
-		System.out.println("ID de empleado no válido");
-		return false;
-	}
+    public boolean eliminarEmpleado(int id) {
+        if (id > 0) {
+            if (empleadoDAO.eliminarEmpleado(id)) {
+                JOptionPane.showMessageDialog(null, "Empleado eliminado correctamente.");
+                return true;
+            } else {
+                JOptionPane.showMessageDialog(null, "Error al eliminar el empleado.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "ID de empleado no válido");
+        }
+        return false;
+    }
 
-	public List<Empleado> listarEmpleados(String filtro, String orden) {
-		return empleadoDAO.listarEmpleados(filtro, orden);
-	}
+    public List<Empleado> listarEmpleados(String filtro, String orden) {
+        return empleadoDAO.listarEmpleados(filtro, orden);
+    }
 
-	// Método para validaciones de datos
-	private boolean validarEmpleado(Empleado empleado) {
-	    // Validación del nombre
-	    if (empleado.getNombre() == null || empleado.getNombre().isEmpty()) {
-	        System.out.println("Nombre no puede estar vacío.");
-	        return false;
-	    }
-	    
-	    // Validación de los apellidos
-	    if (empleado.getApellidos() == null || empleado.getApellidos().isEmpty()) {
-	        System.out.println("Apellidos no pueden estar vacíos.");
-	        return false;
-	    }
-	    
-	    // Validación del correo electrónico
-	    if (empleado.getEmail() == null || !empleado.getEmail().contains("@")) {
-	        System.out.println("Email inválido.");
-	        return false;
-	    }
-	    
-	    // Validación del departamento
-	    if (empleado.getDepartamento() == null || empleado.getDepartamento().isEmpty()) {
-	        System.out.println("Departamento no puede estar vacío.");
-	        return false;
-	    }
-	    
-	    // Validación del número de teléfono (solo números)
-	    if (empleado.getTelefono() == null || !empleado.getTelefono().matches("\\d+")) {
-	        System.out.println("El número de teléfono solo puede contener números.");
-	        return false;
-	    }
-
-	    // Si todas las validaciones son correctas
-	    return true;
-	}
+    // Método para mostrar errores en una ventana emergente
+    private void mostrarErrores(List<String> errores) {
+        StringBuilder mensaje = new StringBuilder("Errores encontrados:\n");
+        for (String error : errores) {
+            mensaje.append("- ").append(error).append("\n");
+        }
+        JOptionPane.showMessageDialog(null, mensaje.toString(), "Errores de Validación", JOptionPane.ERROR_MESSAGE);
+    }
 }
