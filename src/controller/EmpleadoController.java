@@ -54,7 +54,10 @@ public class EmpleadoController {
 			System.out.println("Email inválido.");
 			return false;
 		}
-		// Agrega más validaciones según sea necesario
+		if (empleado.getDepartamento() == null || empleado.getDepartamento().isEmpty()) {
+			System.out.println("Departamento no pueden estar vacío.");
+			return false;
+		}
 		return true;
 	}
 }
