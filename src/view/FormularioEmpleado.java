@@ -92,6 +92,7 @@ public class FormularioEmpleado extends JDialog {
         setVisible(true);
     }
 
+    // Método para guardar empleado
     private void guardarEmpleado() {
         if (empleado == null) {
             empleado = new Empleado();
